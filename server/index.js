@@ -12,9 +12,9 @@ app.use(express.json());
 
 const niceList = require ('../utils/niceList.json');
 const merkleTree = new MerkleTree(niceList);
-const root = merkleTree.getRoot();
+const merkleRoot = merkleTree.getRoot();
+console.log( 'the merkle root : ' + merkleRoot );
 
-console.log( root );
 const MERKLE_ROOT = 'ddd59a2ffccddd60ff47993312821cd57cf30f7f14fb82937ebe2c4dc78375aa';
 
 app.post('/gift', (req, res) => {
@@ -22,7 +22,9 @@ app.post('/gift', (req, res) => {
   const body = req.body;
 
   // TODO: prove that a name is in the list 
-  const isInTheList = false;
+  const isInTheList = verifyProof(body.proof, body.leaf, MERKLE_ROOT);
+
+
   if(isInTheList) {
     res.send("You got a toy robot!");
   }
